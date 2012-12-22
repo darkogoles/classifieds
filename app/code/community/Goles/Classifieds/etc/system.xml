@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <classifieds translate="label" module="classifieds">
+            <label>Classifieds</label>
+            <sort_order>99999</sort_order>
+        </classifieds>
+    </tabs>
+    <sections>
+        <classifieds_design translate="label" module="classifieds">
+            <label>Design options</label>
+            <tab>classifieds</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <elements translate="label">
+                    <label>Ads add_new / edit screen</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <form_element_class>
+                            <label>Form element class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </form_element_class>
+                    </fields>      
+                </elements>
+            </groups>
+        </classifieds_design>
+    </sections>  
+</config>

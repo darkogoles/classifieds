@@ -1,0 +1,23 @@
+<?php
+/**
+ * Top menu for store
+ *
+ * @see Mage_Page_Block_Html_Topmenu
+ */
+?>
+<?php $_menu = $this->getHtml('level-top') ?>
+<?php if ($_menu): ?>
+    <div class="row"><div class="span12">
+            <div class="subnav">
+                <ul class="nav nav-pills">
+                    <?php echo $_menu ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+<?php endif; ?>

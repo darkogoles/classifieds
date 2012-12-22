@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    
+    <default>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>bootstrap/css/bootstrap.min.css</stylesheet>
+                <params>media="screen"</params>
+            </action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="page/html_head" name="boostrapJs" template="bootstrap/before_body_end.phtml">
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>bootstrap/js/jquery-latest.js</name>
+                    <params/>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>bootstrap/js/bootstrap.min.js</name>
+                    <params/>
+                </action>
+            </block>
+        </reference>
+    </default>
+</layout>

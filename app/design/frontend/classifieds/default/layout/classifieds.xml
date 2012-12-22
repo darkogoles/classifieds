@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 
 <layout version="0.1.0">
-    
     <default>
         <reference name="head">
             <action method="addCss">
                 <stylesheet>bootstrap/css/bootstrap.min.css</stylesheet>
                 <params>media="screen"</params>
             </action>
+            
+            <!--                        <action method="addItem">
+                <type>skin_js</type>
+                <name>classifieds/colorbox/jquery.colorbox.js</name>
+            </action>-->
+            
         </reference>
         <reference name="before_body_end">
             <block type="page/html_head" name="boostrapJs" template="bootstrap/before_body_end.phtml">
@@ -24,4 +29,29 @@
             </block>
         </reference>
     </default>
+    <classifieds_item_add translate="label">
+        <reference name="content">
+            <block type="classifieds/form_edit" name="classifieds_form_edit" template="classifieds/form/edit.phtml">
+            </block>
+        </reference>
+        <reference name="left">
+            <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+                <action method="addLink" translate="label" module="customer">
+                    <name>account</name>
+                    <path>customer/account/</path>
+                    <label>Account Dashboard</label>
+                </action>
+                <action method="addLink" translate="label" module="customer">
+                    <name>account_edit</name>
+                    <path>customer/account/edit/</path>
+                    <label>Account Information</label>
+                </action>
+                <action method="addLink" translate="label" module="customer">
+                    <name>address_book</name>
+                    <path>customer/address/</path>
+                    <label>Address Book</label>
+                </action>
+            </block>
+        </reference>
+    </classifieds_item_add>
 </layout>

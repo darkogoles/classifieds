@@ -10,7 +10,14 @@
  *
  * @author Darko
  */
-class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Text {
+class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Template {
+
+    protected function _construct() {
+
+        parent::_construct();
+
+        $this->setTemplate('classifieds/form/element/fieldset.phtml');
+    }
 
     public function getCategoryHtml($parent_id = 0) {
 
@@ -75,7 +82,9 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Text
                 'options' => $options,
                 'onchange' => 'javascript:onCategoryChange(\'' . $fieldset_id . '\', \'category_' . $parent_id . '\')'
                     ));
-            $this->setText($fieldset->toHtml());
+            //$this->setText($fieldset->toHtml());
+            $this->setType('category_select');
+            $this->setFieldset($fieldset);
         }
 
         return $this;
@@ -176,7 +185,9 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Text
             'name' => 'cid',
         ));
 
-        $this->setText($fieldset->toHtml());
+        //$this->setText($fieldset->toHtml());
+        $this->setType('attributes_fieldset');
+        $this->setFieldset($fieldset);
         return $this;
     }
 

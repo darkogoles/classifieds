@@ -25,8 +25,7 @@ class Goles_Classifieds_ItemController extends Mage_Core_Controller_Front_Action
                 ->createBlock('classifieds/form_element_fieldset')
                 ->getCategoryHtml($postData['parent_id']);
         //->getAttributesFieldset($postData['parent_id']);
-
-        echo $block->toHtml();
+        $this->getResponse()->setBody($block->toHtml());
     }
 
     public function saveAction() {

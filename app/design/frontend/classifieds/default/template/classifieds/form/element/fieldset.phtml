@@ -6,21 +6,59 @@ $fieldsetType = $this->getType();
     <div class="span9">
         <fieldset id="<?php echo $fieldset->getHtmlId(); ?>" <?php echo $fieldset->serialize(array('class')); ?>>
             <?php if ($fieldsetType && $fieldsetType == 'attributes_fieldset'): ?>
-                <div class="row">
-                    <?php $columns = $this->getFieldsetElementsColumns($fieldset); ?>
-                    <?php foreach ($columns as $col): ?>
-                        <div class="span3">
-                            <?php $elementsInCol = $col['element']; ?>
-                            <?php foreach ($elementsInCol as $element): ?>
-                                <?php
-                                if ($element->getType() != 'fieldset') {
-                                    echo $element->toHtml();
-                                }
-                                ?>
+
+                <?php $rows = $this->getFieldsetElementsRowsColumns($fieldset); ?>
+
+                <?php if (isset($rows['multicol']) && count($rows['multicol']) > 0): ?>
+                    <div class="row">
+                        <?php $columns = $rows['multicol']; ?>
+                        <?php foreach ($columns as $col): ?>
+                            <div class="span3">
+                                <?php $elementsInCol = $col['element']; ?>
+                                <?php foreach ($elementsInCol as $element): ?>
+                                    <?php
+                                    if ($element->getType() != 'fieldset') {
+                                        echo $element->toHtml();
+                                    }
+                                    ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($rows['singlecol']) && count($rows['singlecol']) > 0): ?>
+                    <div class="row">
+                        <div class="span9">
+                            <?php $rows = $rows['singlecol']; ?>
+                            <?php foreach ($rows as $row): ?>
+                                <?php echo $row->toHtml(); ?>
                             <?php endforeach; ?>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($rows['other']) && count($rows['other']) > 0): ?>
+                    <div class="row">
+                        <div class="span9">
+                            <?php $rows = $rows['other']; ?>
+                            <?php foreach ($rows as $row): ?>
+                                <?php echo $row->toHtml(); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($rows['button']) && count($rows['button']) > 0): ?>
+                    <div class="row">
+                        <div class="span9">
+                            <?php $rows = $rows['button']; ?>
+                            <?php foreach ($rows as $row): ?>
+                                <?php echo $row->toHtml(); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
             <?php else: ?>
                 <?php echo $fieldset->getChildrenHtml(); ?>
             <?php endif; ?>

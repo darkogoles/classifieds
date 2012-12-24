@@ -10,16 +10,19 @@
  *
  * @author Darko
  */
-class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Template {
+class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Template
+{
 
-    protected function _construct() {
+    protected function _construct()
+    {
 
         parent::_construct();
 
         $this->setTemplate('classifieds/form/element/fieldset.phtml');
     }
 
-    public function getCategoryHtml($parent_id = 0) {
+    public function getCategoryHtml($parent_id = 0)
+    {
 
         if ($this->_categoryHasChilds($parent_id)) {
             return $this->getCategoryListFieldset($parent_id);
@@ -27,7 +30,8 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $this->getAttributesFieldset($parent_id);
     }
 
-    private function _categoryHasChilds($parent_id) {
+    private function _categoryHasChilds($parent_id)
+    {
 
         $count = Mage::getModel('catalog/category')->getCollection()->addFieldToFilter('parent_id', $parent_id)->count();
         if ($count > 0) {
@@ -36,7 +40,8 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return false;
     }
 
-    private function _getOptions($parent_id) {
+    private function _getOptions($parent_id)
+    {
 
         $cat_collection = Mage::getModel('catalog/category')
                 ->getCategories($parent_id, 1, false, true, true);
@@ -49,7 +54,8 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $categories;
     }
 
-    public function getCategoryListFieldset($parent_id = 0) {
+    public function getCategoryListFieldset($parent_id = 0)
+    {
 
         $form = new Varien_Data_Form();
         $fieldset = $form->addFieldset('base_fieldset', array('class' => 'fieldset well'));
@@ -90,7 +96,8 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $this;
     }
 
-    public function getAttributesFieldset($cat_id) {
+    public function getAttributesFieldset($cat_id)
+    {
 
         $category = Mage::getModel('catalog/category')->load($cat_id);
 
@@ -191,14 +198,16 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $this;
     }
 
-    protected function _addElementTypes(Varien_Data_Form_Abstract $baseElement) {
+    protected function _addElementTypes(Varien_Data_Form_Abstract $baseElement)
+    {
         $types = $this->_getAdditionalElementTypes();
         foreach ($types as $code => $className) {
             $baseElement->addType($code, $className);
         }
     }
 
-    protected function _getAdditionalElementTypes() {
+    protected function _getAdditionalElementTypes()
+    {
         $result = array(
             'price' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_price'),
             'weight' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_weight'),
@@ -218,12 +227,59 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $result;
     }
 
-    public function getFieldsetElementsColumns($fieldset) {
-        
+    public function getFieldsetElementsRowsColumns($fieldset)
+    {
+
         $elements = $fieldset->getSortedElements();
 
-        $count = count($elements);
-        $colNum = 3;
+        $singleColElements = array();
+        $multiColElements = array();
+        $otherElements = array();
+        $buttonElements = array();
+
+        foreach ($elements as $element) {
+
+            switch ($element->getType()) {
+                //singleCol
+                case 'editor':
+                case 'gallery':
+                case 'image':
+                case 'textarea':
+                    $singleColElements[] = $element;
+                    break;
+                //multiCol
+                case 'text':
+                case 'checkbox':
+                case 'checkboxes':
+                case 'date':
+                case 'file':
+                case 'label':
+                case 'imagefile':
+                case 'radio':
+                case 'select':
+                case 'time':
+                case 'radios':
+                    $multiColElements[] = $element;
+                    break;
+                //other
+                case 'hidden':
+                    $otherElements[] = $element;
+                    break;
+                //button
+                case 'button':
+                case 'submit':
+                    $buttonElements[] = $element;
+                    break;
+                default:
+                    $singleColElements[] = $element;
+                    break;
+            }
+        }
+
+        //Handle multi column elements
+        
+        $count = count($multiColElements);
+        $colNum = 2;
 //            $col1 = floor(($count + $colNum - 1) / $colNum);
 //            $col2 = floor(($count + $colNum - 2) / $colNum);
 //            $col3 = floor(($count + $colNum - 3) / $colNum);
@@ -238,12 +294,19 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         for ($i = 0; $i < count($columns); $i++) {
             $numItemsInCol = $columns[$i]['items_count'];
             for ($j = 0; $j < $numItemsInCol; $j++) {
-                $columns[$i]['element'][$j] = $elements[$lastIndex];
+                $columns[$i]['element'][$j] = $multiColElements[$lastIndex];
                 $lastIndex++;
             }
         }
+
+        $rows = array();
         
-        return $columns;
+        $rows['multicol'] = $columns;
+        $rows['singlecol'] = $singleColElements;
+        $rows['other'] = $otherElements;
+        $rows['button'] = $buttonElements;
+        
+        return $rows;
     }
 
 }

@@ -1,15 +1,13 @@
-
 <?php echo $this->getForm(); ?>
-
 <script type="text/javascript">
     
-//    jQuery(function($){
-//        $(document).ready(function() {
-//            $('#frm_edit_add').submit(function() {
-//                $('.validation-failed').addClass('control-group error');
-//            });
-//        })
-//    });
+    //    jQuery(function($){
+    //        $(document).ready(function() {
+    //            $('#frm_edit_add').submit(function() {
+    //                $('.validation-failed').addClass('control-group error');
+    //            });
+    //        })
+    //    });
     
     //< ![CDATA[
     var customForm = new VarienForm('frm_edit_add');
@@ -17,8 +15,8 @@
     function onCategoryChange(fieldset_selector, category_selector)
     { 
         //jQuery(function($){
-            //$.colorbox({escKey: false, overlayClose: false, transition: "none", opacity: 0.8, href:'<?php echo $this->getSkinUrl('classifieds/images/ajax-loader.gif') ?>'});
-       // });
+        //$.colorbox({escKey: false, overlayClose: false, transition: "none", opacity: 0.8, href:'<?php echo $this->getSkinUrl('classifieds/images/ajax-loader.gif') ?>'});
+        // });
         
         var to_rm_selector = '*[id^="' + fieldset_selector + '_"]';
         $$(to_rm_selector).each(function(el){
@@ -39,17 +37,17 @@
             parameters: params,
             onComplete: function(transport) {
             
-//                jQuery(function($){
-//                    $.colorbox.close();
-//                });
+                //                jQuery(function($){
+                //                    $.colorbox.close();
+                //                });
                 //Element.hide('loadingmask');
                 //$('output-div').innerHTML = "";
                 //$('output-div').innerHTML = transport.responseText;
                 $('frm_edit_add').insert({bottom: transport.responseText});
                 
-    //< ![CDATA[
-    var customForm = new VarienForm('frm_edit_add');
-    //]]>
+                //< ![CDATA[
+                var customForm = new VarienForm('frm_edit_add');
+                //]]>
             }
         });
     }

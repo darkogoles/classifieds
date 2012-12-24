@@ -2,42 +2,30 @@
 $fieldset = $this->getFieldset();
 $fieldsetType = $this->getType();
 ?>
-<div>
-    <fieldset id="<?php echo $fieldset->getHtmlId(); ?>" <?php echo $fieldset->serialize(array('class')); ?>>
-        <?php if ($fieldsetType && $fieldsetType == 'attributes_fieldset'): ?>
-            <?php
-            $elements = $fieldset->getSortedElements();
+<div class="row">
+    <div class="span9">
+        <fieldset id="<?php echo $fieldset->getHtmlId(); ?>" <?php echo $fieldset->serialize(array('class')); ?>>
+            <?php if ($fieldsetType && $fieldsetType == 'attributes_fieldset'): ?>
+                <div class="row">
+                    <?php $columns = $this->getFieldsetElementsColumns($fieldset); ?>
+                    <?php foreach ($columns as $col): ?>
+                        <div class="span3">
+                            <?php $elementsInCol = $col['element']; ?>
+                            <?php foreach ($elementsInCol as $element): ?>
+                                <?php
+                                if ($element->getType() != 'fieldset') {
+                                    echo $element->toHtml();
+                                }
+                                ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <?php echo $fieldset->getChildrenHtml(); ?>
+            <?php endif; ?>
 
-            $count = count($elements);
-            $colNum = 3;
-//            $col1 = floor(($count + $colNum - 1) / $colNum);
-//            $col2 = floor(($count + $colNum - 2) / $colNum);
-//            $col3 = floor(($count + $colNum - 3) / $colNum);
-
-            $columns = array();
-            for ($i = 1; $i <= $colNum; $i++) {
-                $colCount = floor(($count + $colNum - $i) / $colNum);
-                $columns[] = array('items_count'=>$colCount);
-            }
-            
-            $lastIndex = 0;
-            for($i=0; $i<count($columns);$i++)
-            {
-                $numItemsInCol = $columns[$i]['items_count'];
-                for($j=0;$j<$numItemsInCol;$j++)
-                {
-                    $columns[$i]['element'] = $elements[$lastIndex];
-                    //TODO: Rasporediti u kolone sada.
-                    echo 'column: ' . $i . ' -' . $lastIndex . '<br />';
-                    $lastIndex++;
-                }
-            }
-            
-            ?>
-
-        <?php else: ?>
-            <?php echo $fieldset->getChildrenHtml(); ?>
-        <?php endif; ?>
-    </fieldset>
+        </fieldset>
+    </div>
 </div>
-        <?php $fieldset->getAfterElementHtml(); ?>
+<?php $fieldset->getAfterElementHtml(); ?>

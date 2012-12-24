@@ -218,4 +218,32 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $result;
     }
 
+    public function getFieldsetElementsColumns($fieldset) {
+        
+        $elements = $fieldset->getSortedElements();
+
+        $count = count($elements);
+        $colNum = 3;
+//            $col1 = floor(($count + $colNum - 1) / $colNum);
+//            $col2 = floor(($count + $colNum - 2) / $colNum);
+//            $col3 = floor(($count + $colNum - 3) / $colNum);
+
+        $columns = array();
+        for ($i = 1; $i <= $colNum; $i++) {
+            $colCount = floor(($count + $colNum - $i) / $colNum);
+            $columns[] = array('items_count' => $colCount);
+        }
+
+        $lastIndex = 0;
+        for ($i = 0; $i < count($columns); $i++) {
+            $numItemsInCol = $columns[$i]['items_count'];
+            for ($j = 0; $j < $numItemsInCol; $j++) {
+                $columns[$i]['element'][$j] = $elements[$lastIndex];
+                $lastIndex++;
+            }
+        }
+        
+        return $columns;
+    }
+
 }

@@ -124,6 +124,10 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         $fieldset_id = 'fs_' . str_replace('/', '_', $parent_cat_path);
         $fieldset->setId($fieldset_id);
 
+        $fieldset->setAttributeSetId($attribute_set_id);
+        
+        $usedAttributeGroupIds = array();
+
         $this->_addElementTypes($fieldset);
 
         foreach ($attributes as $attribute) {
@@ -157,6 +161,11 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
                         )
                         ->setEntityAttribute($attribute);
 
+                if ($groupId = $attribute->getAttributeGroupId()) {
+                    $usedAttributeGroupIds[] = $groupId;
+                    $element->setAttributeGroupId($groupId);
+                }
+
                 $additional_class = Mage::getStoreConfig('classifieds_design/elements/form_element_class');
                 $element->addClass($additional_class);
 
@@ -177,6 +186,7 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
             }
         }
 
+        $fieldset->setUsedAttributeGroupIds(array_unique($usedAttributeGroupIds));
 
         $fieldset->addField('submit', 'submit', array(
             'required' => true,
@@ -227,9 +237,8 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $result;
     }
 
-    public function getFieldsetElementsRowsColumns($fieldset)
+    public function getFieldsetElementsRowsColumns($fieldset, $groupId)
     {
-
         $elements = $fieldset->getSortedElements();
 
         $singleColElements = array();
@@ -238,6 +247,11 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         $buttonElements = array();
 
         foreach ($elements as $element) {
+
+            $elGroupId = $element->getAttributeGroupId();
+            if ($elGroupId != $groupId) {
+                continue;
+            }
 
             switch ($element->getType()) {
                 //singleCol
@@ -277,7 +291,7 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         }
 
         //Handle multi column elements
-        
+
         $count = count($multiColElements);
         $colNum = 2;
 //            $col1 = floor(($count + $colNum - 1) / $colNum);
@@ -287,7 +301,10 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         $columns = array();
         for ($i = 1; $i <= $colNum; $i++) {
             $colCount = floor(($count + $colNum - $i) / $colNum);
-            $columns[] = array('items_count' => $colCount);
+
+            if ($colCount > 0) {
+                $columns[] = array('items_count' => $colCount);
+            }
         }
 
         $lastIndex = 0;
@@ -300,13 +317,34 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         }
 
         $rows = array();
-        
+
         $rows['multicol'] = $columns;
         $rows['singlecol'] = $singleColElements;
         $rows['other'] = $otherElements;
         $rows['button'] = $buttonElements;
-        
+
         return $rows;
+    }
+
+    public function getAttributeSetGroups($fieldset)
+    {
+        $attributeSetId = $fieldset->getAttributeSetId();
+
+        if (!$attributeSetId) {
+            return false;
+        }
+
+        $groups = Mage::getModel('eav/entity_attribute_group')
+                ->getResourceCollection()
+                ->setAttributeSetFilter($attributeSetId)
+                ->setSortOrder(Mage_Eav_Model_Resource_Entity_Attribute_Group_Collection::SORT_ORDER_DESC)
+                ->load();
+
+        if ($groups->getSize() > 0) {
+            return $groups;
+        }
+
+        return false;
     }
 
 }

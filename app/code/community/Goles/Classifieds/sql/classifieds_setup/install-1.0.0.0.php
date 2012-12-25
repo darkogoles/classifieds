@@ -27,6 +27,29 @@ $installer->addAttribute(Mage_Catalog_Model_Category::ENTITY, 'attribute_set', a
     'is_configurable' => false
 ));
 
+
+$installer->addAttribute(Mage_Catalog_Model_Product::ENTITY, 'classified_type', array(
+    'group'             => 'General',
+    'type'              => 'int',
+    'backend'           => '',
+    'frontend'          => '',
+    'label'             => 'Classified type',
+    'input'             => 'select',
+    'class'             => '',
+    'source'            => 'classifieds/product_attribute_source_classifiedtype',
+    'global'            => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_WEBSITE,
+    'visible'           => true,
+    'required'          => true,
+    'user_defined'      => false,
+    'searchable'        => true,
+    'filterable'        => true,
+    'comparable'        => false,
+    'visible_on_front'  => true,
+    'unique'            => false,
+    'apply_to'          => 'simple,configurable,bundle,grouped',
+    'is_configurable'   => false,
+));
+
 //remove "system" (is_user_defined) from some product attributes
 $attributeCodes = array(
     'msrp',
@@ -73,7 +96,7 @@ $defaultAttributeSetId = Mage::getModel('eav/entity_type')->load($defaultTypeId)
 $model = Mage::getModel('eav/entity_attribute_set')
         ->setEntityTypeId($defaultTypeId);
 
-$model->setAttributeSetName('Classifieds_base'); //check if Lite named attribute set exist already?
+$model->setAttributeSetName('classifieds_base'); //check if Lite named attribute set exist already?
 $model->save();
 
 $groups = Mage::getModel('eav/entity_attribute_group')

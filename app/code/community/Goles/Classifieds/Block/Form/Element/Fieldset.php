@@ -115,7 +115,7 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
                 ->load();
 
         $form = new Varien_Data_Form();
-        $fieldset = $form->addFieldset('base_fieldset' . $cat_id, array('class' => 'fieldset well'));
+        $fieldset = $form->addFieldset('base_fieldset' . $cat_id, array('class' => 'fieldset'));
 
         $parent_cat_path = Mage::getModel('catalog/category')
                 ->load($cat_id)
@@ -125,13 +125,12 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         $fieldset->setId($fieldset_id);
 
         $fieldset->setAttributeSetId($attribute_set_id);
-        
+
         $usedAttributeGroupIds = array();
 
         $this->_addElementTypes($fieldset);
 
         foreach ($attributes as $attribute) {
-
             /* @var $attribute Mage_Eav_Model_Entity_Attribute */
             if (!$attribute || ($attribute->hasIsVisible() && !$attribute->getIsVisible())) {
                 continue;
@@ -183,6 +182,9 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
 //                } else if ($inputType == 'text') {
 //                    $element->addClass('input-xxlarge');
 //                }
+                if (!$element->getAttributeGroupId()) {
+                    $element->setAttributeGroupId(0);
+                }
             }
         }
 
@@ -237,8 +239,32 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         return $result;
     }
 
-    public function getFieldsetElementsRowsColumns($fieldset, $groupId)
+    public function getAttributeGroupTitle($groupName)
     {
+        if ($groupName) {
+            $tmp = explode('::', $groupName);
+            if (is_array($tmp) && count($tmp) == 2) {
+                $groupName = $tmp[0];
+            }
+        }
+        
+        return $groupName;
+    }
+
+    public function getFieldsetElementsRowsColumns($fieldset, $groupId, $groupName = false)
+    {
+
+        $colNum = 3;
+        $forceColumns = false;
+
+        if ($groupName) {
+            $tmp = explode('::', $groupName);
+            if (is_array($tmp) && count($tmp) == 2) {
+                $colNum = (int) $tmp[1];
+                $forceColumns = true;
+            }
+        }
+
         $elements = $fieldset->getSortedElements();
 
         $singleColElements = array();
@@ -253,47 +279,83 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
                 continue;
             }
 
-            switch ($element->getType()) {
-                //singleCol
-                case 'editor':
-                case 'gallery':
-                case 'image':
-                case 'textarea':
-                    $singleColElements[] = $element;
-                    break;
-                //multiCol
-                case 'text':
-                case 'checkbox':
-                case 'checkboxes':
-                case 'date':
-                case 'file':
-                case 'label':
-                case 'imagefile':
-                case 'radio':
-                case 'select':
-                case 'time':
-                case 'radios':
-                    $multiColElements[] = $element;
-                    break;
-                //other
-                case 'hidden':
-                    $otherElements[] = $element;
-                    break;
-                //button
-                case 'button':
-                case 'submit':
-                    $buttonElements[] = $element;
-                    break;
-                default:
-                    $singleColElements[] = $element;
-                    break;
+            if (true === $forceColumns) {
+                switch ($element->getType()) {
+                    //singleCol
+                    case 'editor':
+                    case 'gallery':
+                    case 'image':
+                        $singleColElements[] = $element;
+                        break;
+                    //multiCol
+                    case 'text':
+                    case 'checkbox':
+                    case 'checkboxes':
+                    case 'date':
+                    case 'file':
+                    case 'label':
+                    case 'imagefile':
+                    case 'radio':
+                    case 'select':
+                    case 'time':
+                    case 'radios':
+                    case 'textarea':
+                        $multiColElements[] = $element;
+                        break;
+                    //other
+                    case 'hidden':
+                        $otherElements[] = $element;
+                        break;
+                    //button
+                    case 'button':
+                    case 'submit':
+                        $buttonElements[] = $element;
+                        break;
+                    default:
+                        $singleColElements[] = $element;
+                        break;
+                }
+            } else {
+                switch ($element->getType()) {
+                    //singleCol
+                    case 'editor':
+                    case 'gallery':
+                    case 'image':
+                    case 'textarea':
+                        $singleColElements[] = $element;
+                        break;
+                    //multiCol
+                    case 'text':
+                    case 'checkbox':
+                    case 'checkboxes':
+                    case 'date':
+                    case 'file':
+                    case 'label':
+                    case 'imagefile':
+                    case 'radio':
+                    case 'select':
+                    case 'time':
+                    case 'radios':
+                        $multiColElements[] = $element;
+                        break;
+                    //other
+                    case 'hidden':
+                        $otherElements[] = $element;
+                        break;
+                    //button
+                    case 'button':
+                    case 'submit':
+                        $buttonElements[] = $element;
+                        break;
+                    default:
+                        $singleColElements[] = $element;
+                        break;
+                }
             }
         }
-
         //Handle multi column elements
 
         $count = count($multiColElements);
-        $colNum = 2;
 //            $col1 = floor(($count + $colNum - 1) / $colNum);
 //            $col2 = floor(($count + $colNum - 2) / $colNum);
 //            $col3 = floor(($count + $colNum - 3) / $colNum);
@@ -337,7 +399,7 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
         $groups = Mage::getModel('eav/entity_attribute_group')
                 ->getResourceCollection()
                 ->setAttributeSetFilter($attributeSetId)
-                ->setSortOrder(Mage_Eav_Model_Resource_Entity_Attribute_Group_Collection::SORT_ORDER_DESC)
+                ->setSortOrder(Mage_Eav_Model_Resource_Entity_Attribute_Group_Collection::SORT_ORDER_ASC)
                 ->load();
 
         if ($groups->getSize() > 0) {

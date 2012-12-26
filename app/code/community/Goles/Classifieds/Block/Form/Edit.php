@@ -10,9 +10,11 @@
  *
  * @author Darko
  */
-class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template {
+class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template
+{
 
-    public function getSaveUrl() {
+    public function getSaveUrl()
+    {
 
         $form = new Varien_Data_Form();
 
@@ -24,7 +26,8 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template {
         return Mage::getUrl('customer/address/formPost', array('_secure' => true, 'id' => null));
     }
 
-    public function getForm() {
+    public function getForm()
+    {
 
         $form = new Varien_Data_Form();
         $form->setId('frm_edit_add');
@@ -34,6 +37,24 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template {
         //$form->setClass('well');
 
         $fieldset = $form->addFieldset('base_fieldset', array('class' => 'fieldset well'));
+
+//        //$classifiedType = Mage::getModel('catalog/product_attribute');
+//        $classifiedType = Mage::getModel('eav/entity_attribute')
+//                ->loadByCode(Mage_Catalog_Model_Product::ENTITY, 'classified_type');
+//
+//        if ($classifiedType && $classifiedType->getId()) {
+//            
+//            $element = $fieldset->addField('classified_type', 'select', array(
+//                'name' => 'product[classified_type]',
+//                'label' => Mage::helper('classifieds')->__('Classified type: '),
+//                'id' => 'classified_type',
+//                'class' => $classifiedType->getFrontend()->getClass(),
+//                //'options' => $options,
+//                //'onchange' => 'javascript:onCategoryChange(\'' . $fieldset_id . '\', \'category_' . $root_cat_id . '\')'
+//            ));
+//            
+//            $element->setValues($classifiedType->getSource()->getAllOptions(true, true));
+//        }
 
         $categories = $this->getMainCategories();
 
@@ -65,7 +86,8 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template {
         return $form->toHtml();
     }
 
-    public function getMainCategories() {
+    public function getMainCategories()
+    {
 
         $root_cat_id = Mage::app()->getStore()->getRootCategoryId();
 

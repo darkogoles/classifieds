@@ -28,7 +28,6 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template
 
     public function getForm()
     {
-
         $form = new Varien_Data_Form();
         $form->setId('frm_edit_add');
         $form->setUseContainer(true);
@@ -36,7 +35,7 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template
         $form->setMethod('POST');
         //$form->setClass('well');
 
-        $fieldset = $form->addFieldset('base_fieldset', array('class' => 'fieldset well'));
+        $fieldset = $form->addFieldset('base_fieldset', array('class' => 'fieldset'));
 
 //        //$classifiedType = Mage::getModel('catalog/product_attribute');
 //        $classifiedType = Mage::getModel('eav/entity_attribute')
@@ -80,10 +79,11 @@ class Goles_Classifieds_Block_Form_Edit extends Mage_Core_Block_Template
             'id' => 'category_root',
             'class' => 'input-select ' . $additional_class,
             'options' => $options,
-            'onchange' => 'javascript:onCategoryChange(\'' . $fieldset_id . '\', \'category_' . $root_cat_id . '\')'
+            'onchange' => 'javascript:onCategoryChange(\'' . $fieldset_id . '\', \'category_' . $root_cat_id . '\')',
         ));
 
-        return $form->toHtml();
+        //return $form->toHtml();
+        return $form;
     }
 
     public function getMainCategories()

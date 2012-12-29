@@ -15,7 +15,6 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
 
     protected function _construct()
     {
-
         parent::_construct();
 
         $this->setTemplate('classifieds/form/element/fieldset.phtml');
@@ -62,9 +61,10 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
 
         $cat_options = $this->_getOptions($parent_id);
 
-        $parent_cat_path = Mage::getModel('catalog/category')
-                ->load($parent_id)
-                ->getPath();
+        $parent_cat = Mage::getModel('catalog/category')
+                ->load($parent_id);
+        
+        $parent_cat_path = $parent_cat->getPath();
 
         $fieldset_id = 'fs_' . str_replace('/', '_', $parent_cat_path);
         $fieldset->setId($fieldset_id);
@@ -82,7 +82,7 @@ class Goles_Classifieds_Block_Form_Element_Fieldset extends Mage_Core_Block_Temp
 
             $select = $fieldset->addField('category_' . $parent_id, 'select', array(
                 'name' => 'category',
-                'label' => Mage::helper('classifieds')->__('Category: '),
+                'label' => Mage::helper('classifieds')->__(sprintf('%s: ', $parent_cat->getName())),
                 'id' => 'category',
                 'class' => 'input-select ' . $additional_class,
                 'options' => $options,

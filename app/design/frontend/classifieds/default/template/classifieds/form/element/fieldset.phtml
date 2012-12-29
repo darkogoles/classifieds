@@ -26,8 +26,8 @@ $fieldsetType = $this->getType();
                     ?>
                     <div class="row">
                         <div class="span9">
-                            <div class="well">
-                                <?php echo $this->getAttributeGroupTitle($group->getAttributeGroupName()) ?>
+                            <div class="well-with-title">
+                                <span class="well-title"><?php echo $this->getAttributeGroupTitle($group->getAttributeGroupName()) ?></span>
                                 <?php $rows = $this->getFieldsetElementsRowsColumns($fieldset, $group->getId(), $group->getAttributeGroupName()); ?>
                                 <?php if (isset($rows['multicol']) && count($rows['multicol']) > 0): ?>
                                     <div class="row">
